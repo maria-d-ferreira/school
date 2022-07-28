@@ -22,6 +22,7 @@ export class UsersService {
     const user = await this.usersRepository.insertOne({
       ...createUserRequest,
       password: await hash(createUserRequest.password, 10),
+      role: 'teacher',
     });
     return this.buildResponse(user);
   }
