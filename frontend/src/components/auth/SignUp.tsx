@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 
@@ -11,37 +11,38 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 import { useCreateUserMutation } from "../../apis/users.api";
-import { useAppDispatch } from "../../app/hooks";
-import { setAuthState } from "../../slices/auth.slice";
-import { User } from "../../schemas/User";
-import { useLoginMutation } from "../../apis/auth.api";
 
 const theme = createTheme();
 
 const SignUp: React.FC = () => {
-  const [signin] = useLoginMutation();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [createUser] = useCreateUserMutation();
+  const [err, setErr] = useState(null);
+
+  const errorDiv = err ? (
+    <div className="error" style={{ color: "#BF55EC" }}>
+      <i className="material-icons error-icon">{err}</i>
+    </div>
+  ) : (
+    ""
+  );
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setErr(null);
 
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name").toString();
     const email = formData.get("email").toString();
     const password = formData.get("password").toString();
 
-    try {
-      await createUser({ name, email, password });
-      const response = (await signin({ email, password })) as { data: User };
-      dispatch(setAuthState({ user: response.data }));
-      navigate("/signin");
-    } catch (error) {
-      console.log(error);
-    }
+    await createUser({ name, email, password })
+      .unwrap()
+      .then(() => navigate("/signin"))
+      .catch(error => {
+        setErr(error.data.message);
+      });
   };
 
   return (
@@ -97,6 +98,10 @@ const SignUp: React.FC = () => {
                 />
               </Grid>
             </Grid>
+            <Grid item xs={12}>
+              {errorDiv}
+            </Grid>
+
             <Button
               type="submit"
               fullWidth

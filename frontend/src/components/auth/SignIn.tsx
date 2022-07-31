@@ -24,19 +24,34 @@ const SignIn: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const [err, setErr] = useState(null);
+
+  const errorDiv = err ? (
+    <div className="error" style={{ color: "#BF55EC" }}>
+      <i className="material-icons error-icon">{err}</i>
+    </div>
+  ) : (
+    ""
+  );
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setErr(null);
 
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email").toString();
     const password = formData.get("password").toString();
-    try {
-      const response = (await signin({ email, password })) as { data: User };
-      dispatch(setAuthState({ user: response.data }));
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-    }
+
+    const response = (await signin({ email, password })) as { data: User };
+    await signin({ email, password })
+      .unwrap()
+      .then(() => {
+        dispatch(setAuthState({ user: response.data }));
+        navigate("/");
+      })
+      .catch(error => {
+        setErr(error.data.message);
+      });
   };
   return (
     <>
@@ -81,6 +96,9 @@ const SignIn: React.FC = () => {
               <Typography component="p" color="red">
                 {/* {errror} */}
               </Typography>
+              <Grid item xs={12}>
+                {errorDiv}
+              </Grid>
               <Button
                 type="submit"
                 fullWidth
@@ -105,3 +123,5 @@ const SignIn: React.FC = () => {
 };
 
 export default SignIn;
+
+
