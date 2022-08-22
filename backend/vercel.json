@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "school-back",
+  "name": "school-backend",
   "env": {
     "MONGO_URI": "mongodb+srv://maria:school@cluster0.uf9nt.mongodb.net/?retryWrites=true&w=majority"
   },
