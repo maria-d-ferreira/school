@@ -11,5 +11,5 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "dist/main.ts" }]
+  "routes": [{ "src": "/(.*)", "dest": "src/main.ts" }]
 }
