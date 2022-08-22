@@ -7,7 +7,7 @@
 
   "builds": [
     {
-      "src": "dist/main.ts",
+      "src": "src/main.ts",
       "use": "@vercel/node"
     }
   ],
