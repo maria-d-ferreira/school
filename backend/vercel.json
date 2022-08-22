@@ -1,20 +1,15 @@
-
-
 {
-    "version": 2,
-    "name": "school-back",
-	    "env": {
-        "MONGO_URI": "mongodb+srv://maria:school@cluster0.uf9nt.mongodb.net/?retryWrites=true&w=majority"
-    },
-	
-    "builds": [
-        {
-            "src": "dist/main.js",
-            "use": "@vercel/node"
-        }
-    ],
-     "routes": [
-      { "src": "/(.*)", "dest": "/app.js" }
-   ]
-}
+  "version": 2,
+  "name": "school-back",
+  "env": {
+    "MONGO_URI": "mongodb+srv://maria:school@cluster0.uf9nt.mongodb.net/?retryWrites=true&w=majority"
+  },
 
+  "builds": [
+    {
+      "src": "dist/main.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [{ "src": "/(.*)", "dest": "src/main.ts" }]
+}
