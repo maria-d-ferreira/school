@@ -1,7 +1,7 @@
 {
   "version": 2,
   "env": {
-    "MONGO_URI": "mongodb+srv://maria:school@cluster0.uf9nt.mongodb.net/?retryWrites=true&w=majority"
+    "MONGODB_URI": "mongodb+srv://maria:school@cluster0.uf9nt.mongodb.net/?retryWrites=true&w=majority"
   },
 
   "builds": [
