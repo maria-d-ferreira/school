@@ -1,8 +1,19 @@
 {
   "version": 2,
+  "env": {
+    "MONGODB_URI": "mongodb+srv://maria:school@cluster0.uf9nt.mongodb.net/?retryWrites=true&w=majority",
+    "JWT_SECRET": "s038-ttrgythyrthy-dffMj1234fjriru44030423-edmmfhvhvgggIUYggguighvvvyiul4k",
+    "JWT_EXPIRATION_TIME": "3600"
+  },
 
-  "builds": [
+  "build": [
     {
+      "env": {
+        "MONGODB_URI": "mongodb+srv://maria:school@cluster0.uf9nt.mongodb.net/?retryWrites=true&w=majority",
+        "JWT_SECRET": "s038-ttrgythyrthy-dffMj1234fjriru44030423-edmmfhvhvgggIUYggguighvvvyiul4k",
+        "JWT_EXPIRATION_TIME": "3600"
+      },
+
       "src": "src/main.ts",
       "use": "@vercel/node"
     }
