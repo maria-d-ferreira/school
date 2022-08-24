@@ -9,7 +9,7 @@ import { User } from "../schemas/User";
 export const usersApi = createApi({
   reducerPath: "usersApi",
 
-  baseQuery: fetchBaseQuery({ baseUrl: "/users" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://school-backend-e1jhkszow-maria-ferreira.vercel.app/users" }),
 
   endpoints: build => ({
     createUser: build.mutation<User, CreateUserRequest>({
