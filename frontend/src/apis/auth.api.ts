@@ -5,7 +5,10 @@ import { User } from "../schemas/User";
 export const authApi = createApi({
   reducerPath: "authApi",
 
-  baseQuery: fetchBaseQuery({ baseUrl: "https://school-backend-e1jhkszow-maria-ferreira.vercel.app/auth" }),
+  //baseQuery: fetchBaseQuery({ baseUrl: "https://school-backend-e1jhkszow-maria-ferreira.vercel.app/auth" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.REACT_APP_BASE_URL + "/auth",
+  }),
 
   endpoints: build => ({
     login: build.mutation<User, SignInRequest>({
