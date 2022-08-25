@@ -9,7 +9,7 @@ async function bootstrap() {
 
   const whitelist = [
     'http://localhost:5000',
-    'https://school-frontend-six.vercel.app',
+    'https://school-frontend-six.vercel.app/signin',
   ];
   app.enableCors({
     origin: function (origin, callback) {
