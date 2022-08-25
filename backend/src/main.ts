@@ -7,13 +7,13 @@ import cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const whitelist = [
+  const list = [
     'http://localhost:5000',
-    'https://school-frontend-six.vercel.app/signin',
+    'https://school-frontend-six.vercel.app',
   ];
   app.enableCors({
     origin: function (origin, callback) {
-      if (!origin || whitelist.indexOf(origin) !== -1) {
+      if (!origin || list.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
