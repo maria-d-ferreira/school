@@ -9,7 +9,7 @@ async function bootstrap() {
 
   app.enableCors({
     allowedHeaders: ['content-type'],
-    origin: '*',
+    origin: 'https://school-frontend-six.vercel.app',
     credentials: true,
   });
 
