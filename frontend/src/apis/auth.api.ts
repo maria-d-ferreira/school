@@ -10,8 +10,10 @@ export const authApi = createApi({
   // }),
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_BASE_URL + "/auth",
+    mode:"cors",
   }),
 
+ 
   endpoints: build => ({
     login: build.mutation<User, SignInRequest>({
       query: signInRequest => ({

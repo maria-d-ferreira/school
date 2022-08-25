@@ -15,6 +15,7 @@ export const usersApi = createApi({
 
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_BASE_URL + "/users",
+    mode: "cors",
   }),
 
   endpoints: build => ({
