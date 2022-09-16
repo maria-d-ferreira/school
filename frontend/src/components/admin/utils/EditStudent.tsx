@@ -151,7 +151,9 @@ const EditStudent: React.FC<Props> = props => {
               <Button
                 type="button"
                 variant="contained"
-                style={{ textTransform: "none" }}
+                style={{
+                  textTransform: "none",
+                }}
                 onClick={() => handleDelete(id)}
               >
                 delete

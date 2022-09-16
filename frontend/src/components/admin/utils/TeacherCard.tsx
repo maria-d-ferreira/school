@@ -25,7 +25,7 @@ export default function UserCard(props: Props) {
     setApprove(prev => !prev);
   };
 
-  const color = approve ? "text.secondary" : "red";
+  const color = approve ? "text.secondary" : "error.dark";
 
   return (
     <Card
@@ -42,7 +42,7 @@ export default function UserCard(props: Props) {
         <Typography component="div" color={color}>
           {name}
         </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+        <Typography sx={{ mb: 1.5 }} color={color}>
           {email}
         </Typography>
 

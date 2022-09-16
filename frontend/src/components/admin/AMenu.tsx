@@ -113,7 +113,13 @@ export default function ResponsiveDrawer(props: Props) {
           <Typography variant="h6" noWrap component="div" marginLeft={5}>
             /Admin
           </Typography>
-          <Typography variant="h6" noWrap component="div" marginLeft={5}>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            marginLeft={5}
+            color="#9acbed"
+          >
             {`--${title}`}
           </Typography>
         </Toolbar>
