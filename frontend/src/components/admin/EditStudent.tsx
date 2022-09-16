@@ -10,14 +10,15 @@ import Container from "@mui/material/Container";
 
 import { useCreateUserMutation } from "../../apis/student.api";
 import { TextField } from "@material-ui/core";
+import FormDialog from "../utils/FormDialog";
 
 interface Props {
-  //handleEdit(): void;
   handleShowEdit: (b: boolean) => void;
   id: string;
   name: string;
   email: string;
-  password: string;
+  handleDelete: (id: string) => void;
+  handleUpdate: () => void;
 }
 
 const clearForm = () => {
@@ -27,13 +28,15 @@ const clearForm = () => {
 };
 
 const EditStudent: React.FC<Props> = props => {
-  const { handleShowEdit, id, name, email, password } = props;
+  const { id, name, email, handleShowEdit, handleDelete } = props;
 
   const [createUser] = useCreateUserMutation();
   const [err, setErr] = useState(null);
 
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
+
+  const [openDialog, setOpenDialog] = useState(false);
 
   const errorDiv = err ? (
     <div className="error" style={{ color: "#E3A15A" }}>
@@ -55,10 +58,6 @@ const EditStudent: React.FC<Props> = props => {
       return setErr("password minimum of 8 characters");
     }
   };
-
-  const handleDelete = () => {};
-
-  // `Delete ${name} ${email}  ?`
 
   const handleUpdate = () => {};
 
@@ -153,7 +152,7 @@ const EditStudent: React.FC<Props> = props => {
                 type="button"
                 variant="contained"
                 style={{ textTransform: "none" }}
-                onClick={handleDelete}
+                onClick={() => handleDelete(id)}
               >
                 delete
               </Button>
@@ -180,6 +179,13 @@ const EditStudent: React.FC<Props> = props => {
               >
                 cancel
               </Button>
+              {openDialog ? (
+                <FormDialog
+                  title="Are you sure you want to delete"
+                  text={`${name}   `}
+                  openDialog={openDialog}
+                />
+              ) : null}
             </Grid>
           </Grid>
         </Box>

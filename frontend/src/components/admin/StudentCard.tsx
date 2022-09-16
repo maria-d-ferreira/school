@@ -5,19 +5,19 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
 import Typography from "@mui/material/Typography";
-import { Button } from "@material-ui/core";
+import Button from "@mui/material/Button";
 
 interface Props {
   id: string;
   name: string;
   email: string;
-  courses: string[];
+
   handleEdit: (id: string) => void;
   handleShowEdit: (b: boolean) => void;
 }
 
 export default function UserCard(props: Props) {
-  const { id, name, email, courses, handleEdit, handleShowEdit } = props;
+  const { id, name, email, handleEdit, handleShowEdit } = props;
   const [showEdit, setShowEdit] = useState(false);
 
   const handleClickEdit = (id: string) => {
@@ -45,8 +45,8 @@ export default function UserCard(props: Props) {
         </Typography>
 
         <Button
-          style={{ width: "75%", textTransform: "none" }}
-          variant="outlined"
+          style={{ height: 28, width: "75%", textTransform: "none" }}
+          variant="contained"
           size="small"
           onClick={() => handleClickEdit(id)}
         >

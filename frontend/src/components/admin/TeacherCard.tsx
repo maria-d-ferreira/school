@@ -5,20 +5,19 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
 import Typography from "@mui/material/Typography";
-import { Button } from "@material-ui/core";
+import Button from "@mui/material/Button";
 import { text } from "node:stream/consumers";
 
 interface Props {
   id: string;
   name: string;
   email: string;
-  courses: string[];
   enable: boolean;
   handleApprove: (id: string, approve) => void;
 }
 
 export default function UserCard(props: Props) {
-  const { id, name, email, courses, enable, handleApprove } = props;
+  const { id, name, email, enable, handleApprove } = props;
   const [approve, setApprove] = useState(enable);
 
   const handleClick = (id, approve) => {
@@ -48,8 +47,8 @@ export default function UserCard(props: Props) {
         </Typography>
 
         <Button
-          style={{ width: "75%", textTransform: "none" }}
-          variant="outlined"
+          style={{ height: 28, width: "75%", textTransform: "none" }}
+          variant="contained"
           size="small"
           onClick={() => handleClick(id, approve)}
         >

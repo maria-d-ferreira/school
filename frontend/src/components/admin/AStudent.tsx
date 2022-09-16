@@ -3,20 +3,22 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
+import Button from "@mui/material/Button";
 
 import { useEffect, useState } from "react";
 
 import StudentCard from "./StudentCard";
 import CreateStudent from "./CreateStudent";
 import EditStudent from "./EditStudent";
+import { setDefaultResultOrder } from "dns/promises";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: "center",
-  //color: theme.palette.text.secondary,
+  color: theme.palette.text.secondary,
 }));
 
 const AStudent: React.FC = () => {
@@ -24,6 +26,7 @@ const AStudent: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newStudent, setNewStudent] = useState(false);
+  const [deleteStudent, setDeleteStudent] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [id, setId] = useState("");
@@ -43,7 +46,7 @@ const AStudent: React.FC = () => {
       }
     };
     getData();
-  }, [newStudent]);
+  }, [newStudent, deleteStudent]);
 
   const handleNewStudent = () => setNewStudent(prev => !prev);
 
@@ -56,11 +59,19 @@ const AStudent: React.FC = () => {
     setShowEdit(b);
   };
 
+  const handleDelete = async id => {
+    const url = process.env.REACT_APP_BASE_URL + "/users/user/" + id;
+    const response = await axios.delete(url);
+    setShowEdit(false);
+    setDeleteStudent(prev => !prev);
+  };
+
+  const handleUpdate = () => {};
+
   const students = users.filter(user => user.role === "student");
   const nStudents = students.length;
 
   const student = students.filter(student => student.id === id)[0];
-  console.log(student);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -104,7 +115,6 @@ const AStudent: React.FC = () => {
                     key={t.email}
                     name={t.name}
                     email={t.email}
-                    courses={t.courses}
                     handleEdit={handleEdit}
                     handleShowEdit={handleShowEdit}
                   />
@@ -133,7 +143,8 @@ const AStudent: React.FC = () => {
                 id={student.id}
                 name={student.name}
                 email={student.email}
-                password={student.password}
+                handleDelete={handleDelete}
+                handleUpdate={handleUpdate}
               />
             </Item>
           </Grid>

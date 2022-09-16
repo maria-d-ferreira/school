@@ -70,7 +70,6 @@ const ATeacher: React.FC = () => {
                   key={t.email}
                   name={t.name}
                   email={t.email}
-                  courses={t.courses}
                   enable={t.enable}
                   handleApprove={handleApprove}
                 />

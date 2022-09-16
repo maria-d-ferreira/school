@@ -4,7 +4,7 @@ import { store } from "../../store/store";
 const RequireAuth = ({ allowedRole }) => {
   const location = useLocation();
   const user = store.getState().auth.user;
-  console.log(allowedRole === user.role);
+  //console.log(allowedRole === user.role);
 
   return allowedRole === user?.role ? (
     <Outlet />

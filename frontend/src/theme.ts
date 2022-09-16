@@ -9,7 +9,8 @@ export const theme = createTheme({
     },
 
     primary: {
-      main: color.GREEN,
+      // main: color.GREEN,
+      main: "#3b79a3",
       light: color.GREEN_PASTEL,
       dark: color.GREEN_DARK,
       contrastText: color.WHITE,
@@ -43,6 +44,7 @@ export const theme = createTheme({
       secondary: color.DARK_GREY_3,
       disabled: color.MEDIUM_GREY_1,
     },
+
     // background: {
     //   paper: color.WHITE,
     //   default: color.GREEN_LIGHT_BACK,
@@ -52,5 +54,14 @@ export const theme = createTheme({
     // custom colors for props in Material UI's components.
     // Then you will be able to use it like this: `<Button color="custom">`
     // (For TypeScript, you need to add module augmentation for the `custom` value)
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          height: 30,
+        },
+      },
+    },
   },
 });
