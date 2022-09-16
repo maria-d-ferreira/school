@@ -39,7 +39,7 @@ interface Props {
 export default function ResponsiveDrawer(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [title, setTitle] = useState("Global view");
+  const [title, setTitle] = useState("Teachers");
   const [value, setValue] = useState(0);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -80,7 +80,7 @@ export default function ResponsiveDrawer(props: Props) {
         return <ATeacher />;
       case 1:
         return <AStudent />;
-      case 1:
+      case 2:
         return <AClasses />;
       default:
         return <ATeacher />;
