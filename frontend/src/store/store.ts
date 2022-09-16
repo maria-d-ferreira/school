@@ -1,18 +1,23 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
-import { usersApi } from "../apis/users.api";
+import { teacherApi } from "../apis/teacher.api";
+import { studentApi } from "../apis/student.api";
 import { authApi } from "../apis/auth.api";
-import auth from "../slices/auth.slice";
+import auth from "./auth.slice";
+
 
 export const store = configureStore({
   reducer: {
-    [usersApi.reducerPath]: usersApi.reducer,
+    [teacherApi.reducerPath]: teacherApi.reducer,
+    [studentApi.reducerPath]: studentApi.reducer,
+
     [authApi.reducerPath]: authApi.reducer,
     auth,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
-      .concat(usersApi.middleware)
+      .concat(teacherApi.middleware)
+      .concat(studentApi.middleware)
       .concat(authApi.middleware),
 });
 

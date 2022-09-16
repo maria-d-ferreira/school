@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -16,6 +16,9 @@ export class AuthService {
   ) {}
 
   async signin(user: UserResponse, response: Response): Promise<void> {
+    if (!user.enable) {
+      throw new NotFoundException(`Teacher not approved yet!`);
+    }
     const tokenPayload: TokenPayload = {
       userId: user.id,
     };

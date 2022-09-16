@@ -32,6 +32,10 @@ export class UsersRepository {
     return this.user.find().exec();
   }
 
+  async findTeachers(): Promise<User[]> {
+    return this.user.find({ role: 'teacher' }).exec();
+  }
+
   async removeOne(userId: string): Promise<User> {
     return this.user.findByIdAndRemove(userId);
   }

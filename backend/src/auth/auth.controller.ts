@@ -17,7 +17,7 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ): Promise<void> {
     await this.authService.signin(user, response);
-    console.log(user);
+
     response.send(user);
   }
 }

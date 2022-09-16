@@ -6,7 +6,7 @@ import {
 import { CreateUserRequest } from "../dto/create-user-request.dto";
 import { User } from "../schemas/User";
 
-export const usersApi = createApi({
+export const studentApi = createApi({
   reducerPath: "usersApi",
 
   // baseQuery: fetchBaseQuery({
@@ -21,7 +21,7 @@ export const usersApi = createApi({
   endpoints: build => ({
     createUser: build.mutation<User, CreateUserRequest>({
       query: createUserRequest => ({
-        url: "/signup",
+        url: "/signup/student",
         method: "POST",
         body: createUserRequest,
       }),
@@ -32,4 +32,4 @@ export const usersApi = createApi({
   }),
 });
 
-export const { useCreateUserMutation, useGetUserQuery } = usersApi;
+export const { useCreateUserMutation, useGetUserQuery } = studentApi;

@@ -1,9 +1,15 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useGetUserQuery } from "./apis/users.api";
-import { useAppDispatch } from "./app/hooks";
+//import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 import Routes from "./routes/routes";
-import { setAuthState } from "./slices/auth.slice";
+import { useGetUserQuery } from "./apis/teacher.api";
+import { useAppDispatch } from "./hooks/hooks";
+import { setAuthState } from "./store/auth.slice";
+import RequireAuth from "./components/auth/RequireAuth";
+import { theme } from "../src/theme";
 
 function App() {
   const { data: user } = useGetUserQuery(undefined);
@@ -17,7 +23,14 @@ function App() {
     }
   }, [user, dispatch, navigate]);
 
-  return <Routes />;
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Routes></Routes>
+      </ThemeProvider>
+    </>
+  );
 }
 
 export default App;

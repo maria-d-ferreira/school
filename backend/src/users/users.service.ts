@@ -8,14 +8,14 @@ import { hash, compare } from 'bcrypt';
 import { CreateUserRequest } from './dto/create-user-request.dto';
 import { UserResponse } from './dto/user-response.dto';
 
-import { Role, User } from './users.schema';
+import { User } from './users.schema';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async createUser(
+  async createTeacher(
     createUserRequest: CreateUserRequest,
   ): Promise<UserResponse> {
     await this.validateCreateUserRequest(createUserRequest);
@@ -23,6 +23,20 @@ export class UsersService {
       ...createUserRequest,
       password: await hash(createUserRequest.password, 10),
       role: 'teacher',
+      enable: false,
+    });
+    return this.buildResponse(user);
+  }
+
+  async createStudent(
+    createUserRequest: CreateUserRequest,
+  ): Promise<UserResponse> {
+    await this.validateCreateUserRequest(createUserRequest);
+    const user = await this.usersRepository.insertOne({
+      ...createUserRequest,
+      password: await hash(createUserRequest.password, 10),
+      role: 'student',
+      enable: true,
     });
     return this.buildResponse(user);
   }
@@ -82,12 +96,17 @@ export class UsersService {
     return users;
   }
 
+  async getTeachers(): Promise<User[]> {
+    return await this.usersRepository.findTeachers();
+  }
+
   private buildResponse(user: User): UserResponse {
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,
+      enable: user.enable,
     };
   }
 }

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -10,24 +9,26 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { User } from "../../schemas/User";
-import { useAppDispatch } from "../../app/hooks";
-import { setAuthState } from "../../slices/auth.slice";
+import { useAppDispatch } from "../../hooks/hooks";
+import { setAuthState } from "../../store/auth.slice";
 import { useLoginMutation } from "../../apis/auth.api";
-
-const theme = createTheme();
+import { store } from "../../store/store";
 
 const SignIn: React.FC = () => {
   const [signin] = useLoginMutation();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // const from = location.state?.from?.pathname;
+
   const dispatch = useAppDispatch();
 
   const [err, setErr] = useState(null);
 
   const errorDiv = err ? (
-    <div className="error" style={{ color: "#BF55EC" }}>
+    <div className="error" style={{ color: "#E3A15A" }}>
       <i className="material-icons error-icon">{err}</i>
     </div>
   ) : (
@@ -47,81 +48,83 @@ const SignIn: React.FC = () => {
       .unwrap()
       .then(() => {
         dispatch(setAuthState({ user: response.data }));
-        navigate("/");
+        const user = store.getState().auth.user;
+        if (user.role === "admin") navigate("/a/menu");
+        if (user.role === "teacher") navigate("/t/menu");
+        if (user.role === "student") navigate("/s/menu");
       })
       .catch(error => {
         setErr(error.data.message);
       });
   };
+
   return (
     <>
-      {" "}
-      <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography component="h1" variant="h4" marginBottom={2}>
+            start:school
+          </Typography>
+          <Avatar sx={{ m: 1 }}></Avatar>
+          <Typography component="h1" variant="h6">
+            Login
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              type="email"
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              type="password"
+              fullWidth
+              name="password"
+              label="Password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <Typography component="p" color="red">
+              {/* {errror} */}
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                type="email"
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                type="password"
-                fullWidth
-                name="password"
-                label="Password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <Typography component="p" color="red">
-                {/* {errror} */}
-              </Typography>
-              <Grid item xs={12}>
-                {errorDiv}
+            <Grid item xs={12}>
+              {errorDiv}
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Login
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Typography variant="body2">
+                  <Link to="/signup">Register as a Teacher</Link>
+                </Typography>
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <Typography variant="body2">
-                    <Link to="/signup">Don't have an account? Sign Up</Link>
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Box>
+            </Grid>
           </Box>
-        </Container>
-      </ThemeProvider>
+        </Box>
+      </Container>
     </>
   );
 };
 
 export default SignIn;
-
-

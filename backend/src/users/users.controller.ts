@@ -26,16 +26,28 @@ import { UserDto } from './dto/user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('/signup')
-  async createUser(
+  @Post('/signup/teacher')
+  async createTeacher(
     @Body() createUserRequest: CreateUserRequest,
   ): Promise<UserResponse> {
-    return this.usersService.createUser(createUserRequest);
+    return this.usersService.createTeacher(createUserRequest);
+  }
+
+  @Post('/signup/student')
+  async createStudent(
+    @Body() createUserRequest: CreateUserRequest,
+  ): Promise<UserResponse> {
+    return this.usersService.createStudent(createUserRequest);
   }
 
   @Get('/users')
   async getUsers(): Promise<any> {
     return this.usersService.getUsers();
+  }
+
+  @Get('/teachers')
+  async getTeachers(): Promise<any> {
+    return this.usersService.getTeachers();
   }
 
   @Get('/user/:id')

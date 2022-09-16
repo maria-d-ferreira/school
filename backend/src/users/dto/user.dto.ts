@@ -9,5 +9,9 @@ export class UserDto {
   @Expose()
   email: string;
   @Expose()
+  password: string;
+  @Expose()
   role: Role;
+  @Expose()
+  enable: boolean;
 }
