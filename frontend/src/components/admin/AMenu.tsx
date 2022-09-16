@@ -39,7 +39,7 @@ interface Props {
 export default function ResponsiveDrawer(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [title, setTitle] = useState("Teachers");
+  const [title, setTitle] = useState("teachers");
   const [value, setValue] = useState(0);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -108,7 +108,7 @@ export default function ResponsiveDrawer(props: Props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h5" noWrap component="div">
-            start:shool
+            start:school
           </Typography>
           <Typography variant="h6" noWrap component="div" marginLeft={5}>
             /Admin
