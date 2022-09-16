@@ -8,9 +8,9 @@ import Button from "@mui/material/Button";
 
 import { useEffect, useState } from "react";
 
-import StudentCard from "./StudentCard";
-import CreateStudent from "./CreateStudent";
-import EditStudent from "./EditStudent";
+import StudentCard from "./utils/StudentCard";
+import CreateStudent from "./utils/CreateStudent";
+import EditStudent from "./utils/EditStudent";
 import { setDefaultResultOrder } from "dns/promises";
 
 const Item = styled(Paper)(({ theme }) => ({

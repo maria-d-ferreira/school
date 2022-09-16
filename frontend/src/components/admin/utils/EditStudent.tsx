@@ -8,9 +8,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
-import { useCreateUserMutation } from "../../apis/student.api";
+import { useCreateUserMutation } from "../../../apis/student.api";
 import { TextField } from "@material-ui/core";
-import FormDialog from "../utils/FormDialog";
+import FormDialog from "../../utils/FormDialog";
 
 interface Props {
   handleShowEdit: (b: boolean) => void;

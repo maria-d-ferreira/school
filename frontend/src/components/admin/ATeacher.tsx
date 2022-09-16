@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
 
 import { useEffect, useState } from "react";
-import TeacherCard from "./TeacherCard";
+import TeacherCard from "./utils/TeacherCard";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
