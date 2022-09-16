@@ -15,16 +15,15 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import AGlobal from "./AGlobal";
+
 import ATeacher from "./ATeacher";
 import AStudent from "./AStudent";
 import AClasses from "./AClasses";
 
 const list = [
-  { name: "global view", activeIndex: 0 },
-  { name: "teachers", activeIndex: 1 },
-  { name: "students", activeIndex: 2 },
-  { name: "classes", activeIndex: 3 },
+  { name: "teachers", activeIndex: 0 },
+  { name: "students", activeIndex: 1 },
+  { name: "classes", activeIndex: 2 },
 ];
 
 const drawerWidth = 240;
@@ -78,15 +77,13 @@ export default function ResponsiveDrawer(props: Props) {
   const rendering = () => {
     switch (value) {
       case 0:
-        return <AGlobal />;
-      case 1:
         return <ATeacher />;
-      case 2:
+      case 1:
         return <AStudent />;
-      case 3:
+      case 1:
         return <AClasses />;
       default:
-        return <AGlobal />;
+        return <ATeacher />;
     }
   };
 
