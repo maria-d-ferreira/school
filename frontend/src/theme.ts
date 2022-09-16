@@ -11,9 +11,6 @@ export const theme = createTheme({
     primary: {
       // main: color.GREEN,
       main: "#3b79a3",
-      light: color.GREEN_PASTEL,
-      dark: color.GREEN_DARK,
-      contrastText: color.WHITE,
     },
     secondary: {
       main: color.ORANGE,
