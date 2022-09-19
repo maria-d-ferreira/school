@@ -30,8 +30,8 @@ export default function FormDialog(props: Props) {
           <DialogContentText>{text}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleClose(false)}>Cancel</Button>
           <Button onClick={() => handleClose(true)}>Confirm</Button>
+          <Button onClick={() => handleClose(false)}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </div>

@@ -147,6 +147,7 @@ const AStudent: React.FC = () => {
                 email={student.email}
                 handleDelete={handleDelete}
                 handleUpdate={handleUpdate}
+                students={students}
               />
             </Item>
           </Grid>

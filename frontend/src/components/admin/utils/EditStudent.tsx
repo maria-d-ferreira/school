@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -8,9 +8,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
-import { useCreateUserMutation } from "../../../apis/student.api";
 import { TextField } from "@material-ui/core";
 import FormDialog from "../../utils/FormDialog";
+import { Users } from "../../../interfaces/Users";
 
 interface Props {
   handleShowEdit: (b: boolean) => void;
@@ -18,8 +18,8 @@ interface Props {
   name: string;
   email: string;
   handleDelete: (b: boolean, id: string) => void;
-
   handleUpdate: () => void;
+  students: Users[];
 }
 
 const clearForm = () => {
@@ -29,13 +29,18 @@ const clearForm = () => {
 };
 
 const EditStudent: React.FC<Props> = props => {
-  const { id, name, email, handleShowEdit, handleDelete } = props;
+  const { id, name, email, handleShowEdit, handleDelete, students } = props;
 
-  const [createUser] = useCreateUserMutation();
   const [err, setErr] = useState(null);
 
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
+  const [inputOldPwd, setInputOldPwd] = useState("");
+  const [inputNewPwd, setInputNewPwd] = useState("");
+  const [nameChange, setNameChange] = useState(false);
+  const [emailChange, setEmailChange] = useState(false);
+  const [oldPwdChange, setOldPwdChange] = useState(false);
+  const [newPwdChange, setNewPwdChange] = useState(false);
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -47,20 +52,52 @@ const EditStudent: React.FC<Props> = props => {
     ""
   );
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const validateInput = () => {
     setErr(null);
-    const formData = new FormData(event.currentTarget);
-    const name = formData.get("name").toString();
-    const email = formData.get("email").toString();
-    const password = formData.get("password").toString();
-
-    if (password.length < 8) {
-      return setErr("password minimum of 8 characters");
+    if (nameChange || emailChange || newPwdChange) {
+      if (inputName === "") {
+        setErr("Name required!");
+        return false;
+      }
+      if (inputEmail === "" || !inputEmail.includes("@")) {
+        setErr("Pease enter a valid email!");
+        return false;
+      }
+      if (newPwdChange) {
+        if (inputNewPwd.length < 8) {
+          setErr("password minimum of 8 characters");
+          return false;
+        }
+      }
+      return true;
     }
+    //return true;
   };
 
-  const handleUpdate = () => {};
+  const emailExists = () => {
+    if (
+      students.some(
+        student => student["email"] === inputEmail && student["id"] !== id
+      )
+    ) {
+      setErr("Email already exists");
+      return true;
+    }
+    return false;
+  };
+  const matchPassword = () => {
+    return true;
+  };
+
+  const handleUpdate = () => {
+    setErr(null);
+    if (validateInput()) {
+      if (!emailExists()) {
+        if (matchPassword()) {
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     setInputName(name);
@@ -71,9 +108,23 @@ const EditStudent: React.FC<Props> = props => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     s: string
   ) => {
-    s === "name"
-      ? setInputName(event.target.value)
-      : setInputEmail(event.target.value);
+    switch (s) {
+      case "name":
+        setInputName(event.target.value);
+        break;
+      case "email":
+        setInputEmail(event.target.value);
+        break;
+      case "email":
+        setInputOldPwd(event.target.value);
+        break;
+      case "email":
+        setInputNewPwd(event.target.value);
+        break;
+
+      default:
+        break;
+    }
   };
 
   const handleDialog = (b: boolean) => {
@@ -101,18 +152,19 @@ const EditStudent: React.FC<Props> = props => {
               <TextField
                 autoComplete="given-name"
                 name="name"
-                required
                 fullWidth
                 id="name"
                 label="Name"
                 value={inputName}
-                onChange={e => handleChange(e, "name")}
+                onChange={e => {
+                  handleChange(e, "name");
+                  setNameChange(true);
+                }}
               />
             </Grid>
 
             <Grid item xs={12}>
               <TextField
-                required
                 type="email"
                 fullWidth
                 id="email"
@@ -120,30 +172,39 @@ const EditStudent: React.FC<Props> = props => {
                 autoComplete="email"
                 label="Email"
                 value={inputEmail}
-                onChange={e => handleChange(e, "email")}
+                onChange={e => {
+                  handleChange(e, "email");
+                  setEmailChange(true);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                required
                 type="text"
                 fullWidth
                 name="oldPwd"
                 id="oldPwd"
                 autoComplete="new-password"
                 label="Old password"
+                onChange={e => {
+                  handleChange(e, "oldPwd");
+                  setOldPwdChange(true);
+                }}
               />
             </Grid>
 
             <Grid item xs={12}>
               <TextField
-                required
                 type="text"
                 fullWidth
                 name="newPwd"
                 id="newPwd"
                 autoComplete="new-password"
                 label="New password"
+                onChange={e => {
+                  handleChange(e, "newPwd");
+                  setNewPwdChange(true);
+                }}
               />
             </Grid>
           </Grid>

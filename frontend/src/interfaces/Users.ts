@@ -1,11 +1,11 @@
-export interface UsersListProps {
+export interface Users {
   users: User[];
 }
 
 export interface User {
+  id?: string;
   name: string;
   email: string;
   password: string;
-  courses?: string[];
-  enable: boolean;
+  enable?: boolean;
 }
