@@ -24,7 +24,7 @@ export default function FormDialog(props: Props) {
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={() => handleClose(false)}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{text}</DialogContentText>

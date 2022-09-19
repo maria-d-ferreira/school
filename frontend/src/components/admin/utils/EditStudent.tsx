@@ -99,6 +99,11 @@ const EditStudent: React.FC<Props> = props => {
     }
   };
 
+  const handleDialog = (b: boolean) => {
+    handleDelete(b, id);
+    setOpenDialog(prev => !prev);
+  };
+
   useEffect(() => {
     setInputName(name);
     setInputEmail(email);
@@ -125,11 +130,6 @@ const EditStudent: React.FC<Props> = props => {
       default:
         break;
     }
-  };
-
-  const handleDialog = (b: boolean) => {
-    handleDelete(b, id);
-    setOpenDialog(prev => !prev);
   };
 
   return (
@@ -246,7 +246,7 @@ const EditStudent: React.FC<Props> = props => {
                   clearForm();
                 }}
               >
-                cancel
+                close
               </Button>
               {openDialog ? (
                 <FormDialog
