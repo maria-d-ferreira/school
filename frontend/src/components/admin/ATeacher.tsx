@@ -55,27 +55,29 @@ const ATeacher: React.FC = () => {
           <Typography variant="body1" textAlign={"left"}>
             {`teachers : ${nTeachers}  `}
           </Typography>
-          <Item
-            sx={{
-              overflowX: "hidden",
-              overflowY: "scroll",
-              maxHeight: "700px",
-              marginTop: "23px",
-            }}
-          >
-            <Item>
-              {teachers.map(t => (
-                <TeacherCard
-                  id={t.id}
-                  key={t.email}
-                  name={t.name}
-                  email={t.email}
-                  enable={t.enable}
-                  handleApprove={handleApprove}
-                />
-              ))}
+          {teachers.length > 0 && (
+            <Item
+              sx={{
+                overflowX: "hidden",
+                overflowY: "scroll",
+                maxHeight: "700px",
+                marginTop: "23px",
+              }}
+            >
+              <Item>
+                {teachers.map(t => (
+                  <TeacherCard
+                    id={t.id}
+                    key={t.email}
+                    name={t.name}
+                    email={t.email}
+                    enable={t.enable}
+                    handleApprove={handleApprove}
+                  />
+                ))}
+              </Item>
             </Item>
-          </Item>
+          )}
         </Grid>
       </Grid>
     </Box>

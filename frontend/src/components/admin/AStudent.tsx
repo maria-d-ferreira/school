@@ -101,29 +101,31 @@ const AStudent: React.FC = () => {
             </Grid>
           </Grid>
 
-          <Item
-            sx={{
-              overflowX: "hidden",
-              overflowY: "scroll",
-              maxHeight: "700px",
-              marginTop: "10px",
-            }}
-          >
-            <Item>
-              {students
-                .map(t => (
-                  <StudentCard
-                    id={t.id}
-                    key={t.email}
-                    name={t.name}
-                    email={t.email}
-                    handleEdit={handleEdit}
-                    handleShowEdit={handleShowEdit}
-                  />
-                ))
-                .reverse()}
+          {students.length > 0 && (
+            <Item
+              sx={{
+                overflowX: "hidden",
+                overflowY: "scroll",
+                maxHeight: "700px",
+                marginTop: "10px",
+              }}
+            >
+              <Item>
+                {students
+                  .map(t => (
+                    <StudentCard
+                      id={t.id}
+                      key={t.email}
+                      name={t.name}
+                      email={t.email}
+                      handleEdit={handleEdit}
+                      handleShowEdit={handleShowEdit}
+                    />
+                  ))
+                  .reverse()}
+              </Item>
             </Item>
-          </Item>
+          )}
         </Grid>
 
         {showCreate && (
