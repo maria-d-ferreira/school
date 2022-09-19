@@ -19,6 +19,8 @@ import Typography from "@mui/material/Typography";
 import ATeacher from "./ATeacher";
 import AStudent from "./AStudent";
 import AClasses from "./AClasses";
+import { style } from "@mui/system/Stack/createStack";
+import Grid from "@mui/material/Grid";
 
 const list = [
   { name: "teachers", activeIndex: 0 },
@@ -95,6 +97,7 @@ export default function ResponsiveDrawer(props: Props) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          display: "flex",
         }}
       >
         <Toolbar>
@@ -107,21 +110,24 @@ export default function ResponsiveDrawer(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h5" noWrap component="div">
-            start:school
-          </Typography>
-          <Typography variant="h6" noWrap component="div" marginLeft={5}>
-            /Admin
-          </Typography>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            marginLeft={5}
-            color="#9acbed"
-          >
-            {`--${title}`}
-          </Typography>
+
+          <Grid container sx={{ display: "flex" }}>
+            <Grid item xs={3}>
+              <Typography variant="h5" noWrap component="div">
+                start:school
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography variant="h6" noWrap component="div">
+                /admin
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography variant="h6" noWrap component="div" color="#9acbed">
+                {`--${title}`}
+              </Typography>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Box

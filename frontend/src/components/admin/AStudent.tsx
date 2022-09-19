@@ -59,11 +59,13 @@ const AStudent: React.FC = () => {
     setShowEdit(b);
   };
 
-  const handleDelete = async id => {
-    const url = process.env.REACT_APP_BASE_URL + "/users/user/" + id;
-    const response = await axios.delete(url);
-    setShowEdit(false);
-    setDeleteStudent(prev => !prev);
+  const handleDelete = async (b: boolean, id: string) => {
+    if (b) {
+      const url = process.env.REACT_APP_BASE_URL + "/users/user/" + id;
+      const response = await axios.delete(url);
+      setShowEdit(false);
+      setDeleteStudent(prev => !prev);
+    }
   };
 
   const handleUpdate = () => {};

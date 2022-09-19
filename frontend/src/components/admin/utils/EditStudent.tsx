@@ -17,7 +17,8 @@ interface Props {
   id: string;
   name: string;
   email: string;
-  handleDelete: (id: string) => void;
+  handleDelete: (b: boolean, id: string) => void;
+
   handleUpdate: () => void;
 }
 
@@ -73,6 +74,11 @@ const EditStudent: React.FC<Props> = props => {
     s === "name"
       ? setInputName(event.target.value)
       : setInputEmail(event.target.value);
+  };
+
+  const handleDialog = (b: boolean) => {
+    handleDelete(b, id);
+    setOpenDialog(prev => !prev);
   };
 
   return (
@@ -154,7 +160,7 @@ const EditStudent: React.FC<Props> = props => {
                 style={{
                   textTransform: "none",
                 }}
-                onClick={() => handleDelete(id)}
+                onClick={() => setOpenDialog(true)}
               >
                 delete
               </Button>
@@ -184,8 +190,9 @@ const EditStudent: React.FC<Props> = props => {
               {openDialog ? (
                 <FormDialog
                   title="Are you sure you want to delete"
-                  text={`${name}   `}
-                  openDialog={openDialog}
+                  text={`${name}  ? `}
+                  openDialog={true}
+                  handleDialog={handleDialog}
                 />
               ) : null}
             </Grid>

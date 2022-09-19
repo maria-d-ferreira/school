@@ -79,7 +79,7 @@ const CreateStudent: React.FC<Props> = props => {
         }}
       >
         <Typography component="h1" variant="h6">
-          Create Student
+          Create student
         </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>

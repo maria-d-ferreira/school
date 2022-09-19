@@ -10,18 +10,16 @@ interface Props {
   text: string;
   title: string;
   openDialog: boolean;
+  handleDialog: (b: boolean) => void;
 }
 
 export default function FormDialog(props: Props) {
-  const { title, text, openDialog } = props;
-  const [open, setOpen] = React.useState(true);
+  const { title, text, openDialog, handleDialog } = props;
+  const [open, setOpen] = React.useState(openDialog);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
+  const handleClose = (b: boolean) => {
     setOpen(false);
+    handleDialog(b);
   };
 
   return (
@@ -32,8 +30,8 @@ export default function FormDialog(props: Props) {
           <DialogContentText>{text}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Confirm</Button>
+          <Button onClick={() => handleClose(false)}>Cancel</Button>
+          <Button onClick={() => handleClose(true)}>Confirm</Button>
         </DialogActions>
       </Dialog>
     </div>
