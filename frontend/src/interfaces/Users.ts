@@ -4,8 +4,7 @@ export interface Users {
 
 export interface User {
   id?: string;
-  name: string;
-  email: string;
-  password: string;
+  name?: string;
+  email?: string;
   enable?: boolean;
 }

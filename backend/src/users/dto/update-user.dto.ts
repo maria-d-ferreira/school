@@ -22,6 +22,10 @@ export class UpdateUser {
   email: string;
 
   @IsString()
+  @IsOptional()
+  oldPassword: string;
+
+  @IsString()
   @IsNotEmpty()
   @IsOptional()
   password: string;

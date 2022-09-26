@@ -11,14 +11,16 @@ import Container from "@mui/material/Container";
 import { TextField } from "@material-ui/core";
 import FormDialog from "../../utils/FormDialog";
 import { Users } from "../../../interfaces/Users";
+import axios from "axios";
 
 interface Props {
   handleShowEdit: (b: boolean) => void;
   id: string;
   name: string;
   email: string;
+
   handleDelete: (b: boolean, id: string) => void;
-  handleUpdate: () => void;
+  handleUpdate: (b: boolean) => void;
   students: Users[];
 }
 
@@ -29,14 +31,22 @@ const clearForm = () => {
 };
 
 const EditStudent: React.FC<Props> = props => {
-  const { id, name, email, handleShowEdit, handleDelete, students } = props;
+  const {
+    id,
+    name,
+    email,
+    handleShowEdit,
+    handleDelete,
+    handleUpdate,
+    students,
+  } = props;
 
   const [err, setErr] = useState(null);
 
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
-  const [inputOldPwd, setInputOldPwd] = useState("");
-  const [inputNewPwd, setInputNewPwd] = useState("");
+  const [inputOldPwd, setInputOldPwd] = useState(null);
+  const [inputNewPwd, setInputNewPwd] = useState(null);
   const [nameChange, setNameChange] = useState(false);
   const [emailChange, setEmailChange] = useState(false);
   const [oldPwdChange, setOldPwdChange] = useState(false);
@@ -52,26 +62,52 @@ const EditStudent: React.FC<Props> = props => {
     ""
   );
 
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    s: string
+  ) => {
+    switch (s) {
+      case "name":
+        setInputName(event.target.value);
+        break;
+      case "email":
+        setInputEmail(event.target.value);
+        break;
+      case "oldPwd":
+        setInputOldPwd(event.target.value);
+        break;
+      case "newPwd":
+        setInputNewPwd(event.target.value);
+        break;
+
+      default:
+        break;
+    }
+  };
+
   const validateInput = () => {
     setErr(null);
-    if (nameChange || emailChange || newPwdChange) {
-      if (inputName === "") {
-        setErr("Name required!");
-        return false;
-      }
-      if (inputEmail === "" || !inputEmail.includes("@")) {
-        setErr("Pease enter a valid email!");
-        return false;
-      }
-      if (newPwdChange) {
-        if (inputNewPwd.length < 8) {
-          setErr("password minimum of 8 characters");
-          return false;
-        }
-      }
-      return true;
+
+    if (nameChange && inputName === "") {
+      setErr("Name required!");
+      return false;
     }
-    //return true;
+    if (nameChange && !inputEmail.includes("@")) {
+      setErr("Pease enter a valid email!");
+      return false;
+    }
+    if (newPwdChange) {
+      if (inputOldPwd === "") {
+        setErr("need to provide oldPassword");
+        return false;
+      }
+      if (inputNewPwd.length < 8) {
+        setErr("password minimum of 8 characters");
+        return false;
+      }
+    }
+
+    return true;
   };
 
   const emailExists = () => {
@@ -85,15 +121,36 @@ const EditStudent: React.FC<Props> = props => {
     }
     return false;
   };
-  const matchPassword = () => {
-    return true;
+
+  const updateStudent = async () => {
+    setErr(null);
+    const url = process.env.REACT_APP_BASE_URL + "/users/user/student/" + id;
+    if (inputNewPwd) {
+      await axios
+        .patch(url, {
+          name: inputName,
+          email: inputEmail,
+          oldPassword: inputOldPwd,
+          password: inputNewPwd,
+        })
+        .then(() => handleUpdate(true))
+        .catch(error => setErr("Wrong Credentials !"));
+    } else {
+      await axios
+        .patch(url, {
+          name: inputName,
+          email: inputEmail,
+        })
+        .then(() => handleUpdate(true))
+        .catch(error => setErr("Something went Wrong !"));
+    }
   };
 
-  const handleUpdate = () => {
-    setErr(null);
-    if (validateInput()) {
-      if (!emailExists()) {
-        if (matchPassword()) {
+  const handleUpdateStudent = async () => {
+    if (nameChange || emailChange || newPwdChange) {
+      if (validateInput()) {
+        if (!emailExists()) {
+          updateStudent();
         }
       }
     }
@@ -107,30 +164,7 @@ const EditStudent: React.FC<Props> = props => {
   useEffect(() => {
     setInputName(name);
     setInputEmail(email);
-  }, [name]);
-
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    s: string
-  ) => {
-    switch (s) {
-      case "name":
-        setInputName(event.target.value);
-        break;
-      case "email":
-        setInputEmail(event.target.value);
-        break;
-      case "email":
-        setInputOldPwd(event.target.value);
-        break;
-      case "email":
-        setInputNewPwd(event.target.value);
-        break;
-
-      default:
-        break;
-    }
-  };
+  }, [id]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -150,7 +184,6 @@ const EditStudent: React.FC<Props> = props => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                autoComplete="given-name"
                 name="name"
                 fullWidth
                 id="name"
@@ -169,7 +202,6 @@ const EditStudent: React.FC<Props> = props => {
                 fullWidth
                 id="email"
                 name="email"
-                autoComplete="email"
                 label="Email"
                 value={inputEmail}
                 onChange={e => {
@@ -184,7 +216,6 @@ const EditStudent: React.FC<Props> = props => {
                 fullWidth
                 name="oldPwd"
                 id="oldPwd"
-                autoComplete="new-password"
                 label="Old password"
                 onChange={e => {
                   handleChange(e, "oldPwd");
@@ -199,7 +230,6 @@ const EditStudent: React.FC<Props> = props => {
                 fullWidth
                 name="newPwd"
                 id="newPwd"
-                autoComplete="new-password"
                 label="New password"
                 onChange={e => {
                   handleChange(e, "newPwd");
@@ -226,16 +256,18 @@ const EditStudent: React.FC<Props> = props => {
                 delete
               </Button>
             </Grid>
+
             <Grid item xs={4}>
               <Button
                 type="button"
                 variant="contained"
                 style={{ textTransform: "none" }}
-                onClick={handleUpdate}
+                onClick={handleUpdateStudent}
               >
                 update
               </Button>
             </Grid>
+
             <Grid item xs={4}>
               <Button
                 type="button"

@@ -60,6 +60,11 @@ export class UsersController {
     return this.usersService.updateUser(id, updateUserDto);
   }
 
+  @Patch('/user/student/:id')
+  updateStudent(@Param('id') id: string, @Body() updateUserDto: UpdateUser) {
+    return this.usersService.updateStudent(id, updateUserDto);
+  }
+
   @Delete('/user/:id')
   remove(@Param('id') id: string) {
     return this.usersService.removeUser(id);

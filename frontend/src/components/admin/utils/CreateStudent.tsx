@@ -47,15 +47,15 @@ const CreateStudent: React.FC<Props> = props => {
     const email = formData.get("email").toString();
     const password = formData.get("password").toString();
 
-    if (password.length < 8) {
-      return setErr("password minimum of 8 characters");
-    }
-
     const clearForm = () => {
       Array.from(document.querySelectorAll("input")).forEach(
         input => (input.value = "")
       );
     };
+
+    if (password.length < 8) {
+      return setErr("password minimum of 8 characters");
+    }
 
     await createUser({ name, email, password })
       .unwrap()
@@ -85,7 +85,6 @@ const CreateStudent: React.FC<Props> = props => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                autoComplete="given-name"
                 name="name"
                 required
                 fullWidth
@@ -103,7 +102,6 @@ const CreateStudent: React.FC<Props> = props => {
                 id="email"
                 label="Email"
                 name="email"
-                autoComplete="email"
               />
             </Grid>
             <Grid item xs={12}>
@@ -114,7 +112,6 @@ const CreateStudent: React.FC<Props> = props => {
                 name="password"
                 label="Password (min 8 characters)"
                 id="password"
-                autoComplete="new-password"
               />
             </Grid>
           </Grid>

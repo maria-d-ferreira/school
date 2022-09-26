@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import StudentCard from "./utils/StudentCard";
 import CreateStudent from "./utils/CreateStudent";
 import EditStudent from "./utils/EditStudent";
-import { setDefaultResultOrder } from "dns/promises";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -27,6 +26,7 @@ const AStudent: React.FC = () => {
   const [error, setError] = useState(null);
   const [newStudent, setNewStudent] = useState(false);
   const [deleteStudent, setDeleteStudent] = useState(false);
+  const [updateStudent, setUpdateStudent] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [id, setId] = useState("");
@@ -46,7 +46,7 @@ const AStudent: React.FC = () => {
       }
     };
     getData();
-  }, [newStudent, deleteStudent]);
+  }, [newStudent, deleteStudent, updateStudent]);
 
   const handleNewStudent = () => setNewStudent(prev => !prev);
 
@@ -62,13 +62,18 @@ const AStudent: React.FC = () => {
   const handleDelete = async (b: boolean, id: string) => {
     if (b) {
       const url = process.env.REACT_APP_BASE_URL + "/users/user/" + id;
-      const response = await axios.delete(url);
+      await axios.delete(url);
       setShowEdit(false);
       setDeleteStudent(prev => !prev);
     }
   };
 
-  const handleUpdate = () => {};
+  const handleUpdate = (b: boolean) => {
+    if (b) {
+      setShowEdit(false);
+      setUpdateStudent(prev => !prev);
+    }
+  };
 
   const students = users.filter(user => user.role === "student");
   const nStudents = students.length;
@@ -112,12 +117,12 @@ const AStudent: React.FC = () => {
             >
               <Item>
                 {students
-                  .map(t => (
+                  .map(s => (
                     <StudentCard
-                      id={t.id}
-                      key={t.email}
-                      name={t.name}
-                      email={t.email}
+                      id={s.id}
+                      key={s.email}
+                      name={s.name}
+                      email={s.email}
                       handleEdit={handleEdit}
                       handleShowEdit={handleShowEdit}
                     />

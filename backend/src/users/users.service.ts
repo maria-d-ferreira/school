@@ -10,6 +10,7 @@ import { UserResponse } from './dto/user-response.dto';
 
 import { User } from './users.schema';
 import { UsersRepository } from './users.repository';
+import { UpdateUser } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -76,6 +77,30 @@ export class UsersService {
     const user = await this.usersRepository.updateOne(userId, data);
     if (!user) {
       throw new NotFoundException(`User not found by _id: '${userId}'.`);
+    }
+    return this.buildResponse(user);
+  }
+
+  async updateStudent(userId: string, data: UpdateUser): Promise<UserResponse> {
+    let user = await this.usersRepository.findOneById(userId);
+    if (!user) {
+      throw new NotFoundException(`User not found !`);
+    }
+
+    if (data.password) {
+      const passwordIsValid = await compare(data.oldPassword, user.password);
+      if (!passwordIsValid) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
+      user = await this.usersRepository.updateOne(userId, {
+        ...data,
+        password: await hash(data.password, 10),
+      });
+    } else {
+      user = await this.usersRepository.updateOne(userId, {
+        ...data,
+      });
     }
     return this.buildResponse(user);
   }
