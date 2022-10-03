@@ -18,9 +18,10 @@ import Typography from "@mui/material/Typography";
 
 import ATeacher from "./ATeacher";
 import AStudent from "./AStudent";
-import AClasses from "./AClasses";
+
 import { style } from "@mui/system/Stack/createStack";
 import Grid from "@mui/material/Grid";
+//import ACourses from "./ACourses";
 
 const list = [
   { name: "teachers", activeIndex: 0 },
@@ -82,8 +83,8 @@ export default function ResponsiveDrawer(props: Props) {
         return <ATeacher />;
       case 1:
         return <AStudent />;
-      case 2:
-        return <AClasses />;
+      // case 2:
+      //   return <ACourses />;
       default:
         return <ATeacher />;
     }

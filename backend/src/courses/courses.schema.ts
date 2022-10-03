@@ -1,36 +1,46 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ObjectID } from 'bson';
-import { Exclude, Transform } from 'class-transformer';
-
+import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
+
+const student = new mongoose.Schema({
+  studentName: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  classwork: String,
+  presence: Boolean,
+  absence: String,
+});
 
 @Schema({ versionKey: false })
 export class Course extends Document {
-  @Prop({ required: true, unique: true, lowercase: true })
+  @Prop()
+  id: string;
+
+  @Prop({ required: true, unique: true })
   title: string;
 
-  // @Prop({ required: true, lowercase: true })
-  // teacher: { id: ObjectId; name: string };
+  @Prop({ required: true })
+  description: string;
 
-  @Prop({ required: true, lowercase: true })
-  teacher: string;
-
-  //@Prop({ required: true })
+  @Prop({ required: true })
   @Prop()
   start: Date;
 
-  //@Prop({ required: true })
+  @Prop({ required: true })
   @Prop()
   end: Date;
 
-  @Prop()
-  url: string;
+  @Prop({ type: {} })
+  teacher: { id: string; name: string };
 
-  @Prop()
+  @Prop({ type: [] })
   classwork: [string];
 
-  @Prop()
-  students: [{ id: ObjectId; grade: number; classwork: [string] }];
+  @Prop({ type: [{}] })
+  students: [
+    { id?: string; name?: string; grade?: number; classwork?: [string] },
+  ];
 }
 
-export const CoursesSchema = SchemaFactory.createForClass(Course);
+export const CourseSchema = SchemaFactory.createForClass(Course);
+
+// @Prop(({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Users' }] }))
+// students: Users[];

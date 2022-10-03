@@ -6,7 +6,7 @@ import CardContent from "@mui/material/CardContent";
 
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { text } from "node:stream/consumers";
+
 
 interface Props {
   id: string;
@@ -55,11 +55,6 @@ export default function UserCard(props: Props) {
           {approve ? "Disable" : "Enable"}
         </Button>
 
-        {/* {showCourses && (
-
-      
-         
-          )} */}
       </CardContent>
     </Card>
   );

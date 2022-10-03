@@ -1,7 +1,7 @@
 export interface CreateCourseResponse {
+  id: string;
   title: string;
-  teacher: string;
-  start: Date;
-  end: Date;
-  url: string;
+  description: string;
+  // start: Date;
+  // end: Date;
 }

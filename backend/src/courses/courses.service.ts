@@ -10,73 +10,114 @@ import { CreateCourseResponse } from './dto/create-course-response.dto';
 import { Course } from './courses.schema';
 import { CoursesRepository } from './courses.repository';
 
+import { UsersRepository } from 'src/users/users.repository';
+import { AssignTeacherDto } from './dto/assign-teacher.dto';
+
 @Injectable()
 export class CoursesService {
-  constructor(private readonly coursesRepository: CoursesRepository) {}
+  constructor(
+    private readonly coursesRepository: CoursesRepository,
+    private readonly usersRepository: UsersRepository,
+  ) {}
 
-  async createCourse(
+  async create(
     createCourseRequest: CreateCourseRequest,
   ): Promise<CreateCourseResponse> {
-    await this.validateCreateCourseRequest(createCourseRequest);
+    await this.validateCreateCourse(createCourseRequest);
+
     const course = await this.coursesRepository.insertOne({
-      ...createCourseRequest,
+      title: createCourseRequest.title,
+      description: createCourseRequest.description,
+      start: createCourseRequest.start,
+      end: createCourseRequest.start,
     });
+
+    console.log(createCourseRequest.start.toLocaleString());
     return course;
   }
-
-  private async validateCreateCourseRequest(
+  // ---------------------------------------------------------------
+  private async validateCreateCourse(
     createCourseRequest: CreateCourseRequest,
-  ): Promise<Course> {
+  ): Promise<CreateCourseResponse> {
     const course = await this.coursesRepository.findOne(
       createCourseRequest.title,
     );
+
     if (course) {
-      throw new BadRequestException('Course already exits!');
+      throw new BadRequestException('Course already exits !');
     }
     return course;
   }
+
+  // ---------------------------------------------------------------
 
   async getCourses(): Promise<Course[]> {
     const courses = await this.coursesRepository.findAll();
     if (courses.length === 0) {
-      throw new NotFoundException(`No courses found `);
+      throw new NotFoundException(`No courses found !`);
     }
     return courses;
   }
+
+  // ---------------------------------------------------------------
+
+  async deleteCourse(id: string): Promise<Course> {
+    const course = await this.coursesRepository.removeOne(id);
+    if (!course) {
+      throw new NotFoundException(`Course not Found !`);
+    }
+    return course;
+  }
+
+  // ---------------------------------------------------------------
+
+  async assignTeacher(teacherId: string, course: string): Promise<any> {
+    let name = '';
+    try {
+      const findTeacher = await this.usersRepository.findOneById(teacherId);
+      name = findTeacher.name;
+
+      if (!findTeacher) {
+        throw new NotFoundException('User with Id not found !');
+      }
+
+      const res = await this.coursesRepository.findById(course);
+      if (!res) {
+        throw new NotFoundException('Class with Id not found !');
+      }
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+    const data = { id: teacherId, name: name };
+    const res = await this.coursesRepository.addTeacher(course, data);
+  }
+
+  async removeTeacher(course: string): Promise<any> {
+    const res = await this.coursesRepository.removeTeacher(course);
+  }
+
+  async addStudent(student: string, course: string): Promise<any> {
+    let name = '';
+    try {
+      const findStudent = await this.usersRepository.findOneById(student);
+      name = findStudent.name;
+
+      if (!findStudent) {
+        throw new NotFoundException('Student not found !');
+      }
+
+      const findCourse = await this.coursesRepository.findById(course);
+      if (!findCourse) {
+        throw new NotFoundException('Class with not found!');
+      }
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+    const data = { id: student, name: name };
+    const res = await this.coursesRepository.addStudent(data, course);
+  }
+
+  async removeStudent(student: string, course: string): Promise<any> {
+    const res = await this.coursesRepository.removeStudent(student, course);
+  }
 }
-
-//   async getCourseById(courseId: string): Promise<CreateCourseResponse> {
-//     const user = await this.usersRepository.findOneById(userId);
-//     if (!user) {
-//       throw new NotFoundException(`User not found by _id: '${userId}'.`);
-//     }
-//     return this.buildResponse(user);
-//   }
-
-//   async updateUser(userId: string, data: Partial<User>): Promise<UserResponse> {
-//     const user = await this.usersRepository.updateOne(userId, data);
-//     if (!user) {
-//       throw new NotFoundException(`User not found by _id: '${userId}'.`);
-//     }
-//     return this.buildResponse(user);
-//   }
-
-//   async removeUser(userId: string): Promise<UserResponse> {
-//     const user = await this.usersRepository.removeOne(userId);
-//     if (!user) {
-//       throw new NotFoundException(`User not found by _id: '${userId}'.`);
-//     }
-//     return this.buildResponse(user);
-//   }
-
-//   private buildResponse(course: Course): CreateCourseResponse {
-//     return {
-//       //id: course.id,
-//       title: course.title,
-//       teacher: course.teacher.name,
-//       start: course.start,
-//       end: course.end,
-//       url: course.url,
-//     };
-//   }
-// }
