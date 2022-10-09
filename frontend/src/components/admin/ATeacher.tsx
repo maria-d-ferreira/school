@@ -5,8 +5,12 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TeacherCard from "./utils/TeacherCard";
+
+import { usersActions } from "../../store/users.slice";
+import { useDispatch } from "react-redux";
+import { store, useSelector } from "../../store/store";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -17,27 +21,13 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const ATeacher: React.FC = () => {
-  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const url = process.env.REACT_APP_BASE_URL + "/users/users";
-    const getData = async () => {
-      try {
-        const response = await axios.get(url);
-        setUsers(response.data);
-        setError(null);
-      } catch (err) {
-        setError(err.message);
-        setUsers(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getData();
-  }, []);
+  const dispatch = useDispatch();
 
+  useSelector(state => state.users.users);
+  const users = store.getState().users.users;
   const teachers = users.filter(user => user.role === "teacher").reverse();
   const nTeachers = teachers.length;
 
@@ -46,8 +36,15 @@ const ATeacher: React.FC = () => {
     const response = await axios
       .patch(url, { enable: enable })
       .catch(error => console.log("Error: ", error));
+
+    const ur = process.env.REACT_APP_BASE_URL + "/users/users";
+    await axios.get(ur).then(function (response) {
+      dispatch(usersActions.getUsers(response.data));
+    });
   };
 
+
+  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={4}>
@@ -68,7 +65,7 @@ const ATeacher: React.FC = () => {
                 {teachers.map(t => (
                   <TeacherCard
                     id={t.id}
-                    key={t.email}
+                    key={Math.random()}
                     name={t.name}
                     email={t.email}
                     enable={t.enable}

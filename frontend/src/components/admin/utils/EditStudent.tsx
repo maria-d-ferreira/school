@@ -10,8 +10,10 @@ import Container from "@mui/material/Container";
 
 import { TextField } from "@material-ui/core";
 import FormDialog from "../../utils/FormDialog";
-import { Users } from "../../../interfaces/Users";
+import { IUsers } from "../../../interfaces/IUsers";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { usersActions } from "../../../store/users.slice";
 
 interface Props {
   handleShowEdit: (b: boolean) => void;
@@ -21,7 +23,7 @@ interface Props {
 
   handleDelete: (b: boolean, id: string) => void;
   handleUpdate: (b: boolean) => void;
-  students: Users[];
+  students: IUsers[];
 }
 
 const clearForm = () => {
@@ -53,6 +55,8 @@ const EditStudent: React.FC<Props> = props => {
   const [newPwdChange, setNewPwdChange] = useState(false);
 
   const [openDialog, setOpenDialog] = useState(false);
+
+  const dispatch = useDispatch();
 
   const errorDiv = err ? (
     <div className="error" style={{ color: "#E3A15A" }}>
@@ -151,6 +155,10 @@ const EditStudent: React.FC<Props> = props => {
       if (validateInput()) {
         if (!emailExists()) {
           updateStudent();
+          const url = process.env.REACT_APP_BASE_URL + "/users/users";
+          await axios.get(url).then(function (response) {
+            dispatch(usersActions.getUsers(response.data));
+          });
         }
       }
     }

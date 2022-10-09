@@ -21,7 +21,7 @@ import AStudent from "./AStudent";
 
 import { style } from "@mui/system/Stack/createStack";
 import Grid from "@mui/material/Grid";
-//import ACourses from "./ACourses";
+import ACourses from "./ACourses";
 
 const list = [
   { name: "teachers", activeIndex: 0 },
@@ -29,7 +29,7 @@ const list = [
   { name: "classes", activeIndex: 2 },
 ];
 
-const drawerWidth = 240;
+const drawerWidth = 180;
 
 interface Props {
   /**
@@ -83,8 +83,8 @@ export default function ResponsiveDrawer(props: Props) {
         return <ATeacher />;
       case 1:
         return <AStudent />;
-      // case 2:
-      //   return <ACourses />;
+      case 2:
+        return <ACourses />;
       default:
         return <ATeacher />;
     }
@@ -113,19 +113,14 @@ export default function ResponsiveDrawer(props: Props) {
           </IconButton>
 
           <Grid container sx={{ display: "flex" }}>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Typography variant="h5" noWrap component="div">
                 start:school
               </Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={5}>
               <Typography variant="h6" noWrap component="div">
-                /admin
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography variant="h6" noWrap component="div" color="#9acbed">
-                {`--${title}`}
+                {`/admin --${title}`}
               </Typography>
             </Grid>
           </Grid>

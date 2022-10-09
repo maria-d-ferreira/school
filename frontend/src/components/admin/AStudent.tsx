@@ -6,11 +6,15 @@ import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 import StudentCard from "./utils/StudentCard";
 import CreateStudent from "./utils/CreateStudent";
 import EditStudent from "./utils/EditStudent";
+
+import { usersActions } from "../../store/users.slice";
+import { useDispatch } from "react-redux";
+import { store, useSelector } from "../../store/store";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -21,34 +25,17 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const AStudent: React.FC = () => {
-  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [newStudent, setNewStudent] = useState(false);
-  const [deleteStudent, setDeleteStudent] = useState(false);
-  const [updateStudent, setUpdateStudent] = useState(false);
-  const [showCreate, setShowCreate] = useState(false);
+
+  const [showCreate, setShowCreate] = useState(true);
   const [showEdit, setShowEdit] = useState(false);
   const [id, setId] = useState("");
 
-  useEffect(() => {
-    const url = process.env.REACT_APP_BASE_URL + "/users/users";
-    const getData = async () => {
-      try {
-        const response = await axios.get(url);
-        setUsers(response.data);
-        setError(null);
-      } catch (err) {
-        setError(err.message);
-        setUsers(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getData();
-  }, [newStudent, deleteStudent, updateStudent]);
+  const dispatch = useDispatch();
 
-  const handleNewStudent = () => setNewStudent(prev => !prev);
+  useSelector(state => state.users.users);
+  const users = store.getState().users.users;
 
   const handleEdit = (id: string) => setId(id);
 
@@ -64,14 +51,16 @@ const AStudent: React.FC = () => {
       const url = process.env.REACT_APP_BASE_URL + "/users/user/" + id;
       await axios.delete(url);
       setShowEdit(false);
-      setDeleteStudent(prev => !prev);
     }
+    const ur = process.env.REACT_APP_BASE_URL + "/users/users";
+    await axios.get(ur).then(function (response) {
+      dispatch(usersActions.getUsers(response.data));
+    });
   };
 
   const handleUpdate = (b: boolean) => {
     if (b) {
       setShowEdit(false);
-      setUpdateStudent(prev => !prev);
     }
   };
 
@@ -91,7 +80,12 @@ const AStudent: React.FC = () => {
               </Typography>
             </Grid>
 
-            <Grid item xs={6} marginTop="5px">
+            <Grid
+              item
+              xs={6}
+              marginTop="5px"
+              style={{ display: "flex", justifyContent: "flex-end" }}
+            >
               <Button
                 type="button"
                 variant="contained"
@@ -101,7 +95,7 @@ const AStudent: React.FC = () => {
                   setShowEdit(false);
                 }}
               >
-                create student
+                create
               </Button>
             </Grid>
           </Grid>
@@ -120,7 +114,7 @@ const AStudent: React.FC = () => {
                   .map(s => (
                     <StudentCard
                       id={s.id}
-                      key={s.email}
+                      key={Math.random()}
                       name={s.name}
                       email={s.email}
                       handleEdit={handleEdit}
@@ -136,10 +130,7 @@ const AStudent: React.FC = () => {
         {showCreate && (
           <Grid item xs={4} minWidth={325} paddingLeft={3}>
             <Item>
-              <CreateStudent
-                handleNewStudent={handleNewStudent}
-                handeleShowCreate={handleShowCreate}
-              />
+              <CreateStudent handeleShowCreate={handleShowCreate} />
             </Item>
           </Grid>
         )}
@@ -164,4 +155,4 @@ const AStudent: React.FC = () => {
   );
 };
 
-export default AStudent;
+export default memo(AStudent);

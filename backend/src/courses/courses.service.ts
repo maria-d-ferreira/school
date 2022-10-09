@@ -31,8 +31,6 @@ export class CoursesService {
       start: createCourseRequest.start,
       end: createCourseRequest.start,
     });
-
-    console.log(createCourseRequest.start.toLocaleString());
     return course;
   }
   // ---------------------------------------------------------------
@@ -53,9 +51,7 @@ export class CoursesService {
 
   async getCourses(): Promise<Course[]> {
     const courses = await this.coursesRepository.findAll();
-    if (courses.length === 0) {
-      throw new NotFoundException(`No courses found !`);
-    }
+
     return courses;
   }
 
@@ -78,12 +74,12 @@ export class CoursesService {
       name = findTeacher.name;
 
       if (!findTeacher) {
-        throw new NotFoundException('User with Id not found !');
+        throw new NotFoundException('User not found !');
       }
 
       const res = await this.coursesRepository.findById(course);
       if (!res) {
-        throw new NotFoundException('Class with Id not found !');
+        throw new NotFoundException('Class not found !');
       }
     } catch (error) {
       throw new NotFoundException(error.message);
@@ -108,7 +104,7 @@ export class CoursesService {
 
       const findCourse = await this.coursesRepository.findById(course);
       if (!findCourse) {
-        throw new NotFoundException('Class with not found!');
+        throw new NotFoundException('Class not found!');
       }
     } catch (error) {
       throw new NotFoundException(error.message);

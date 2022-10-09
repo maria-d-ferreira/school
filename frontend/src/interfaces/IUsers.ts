@@ -1,8 +1,8 @@
-export interface Users {
-  users: User[];
+export interface IUsers {
+  users: IUser[];
 }
 
-export interface User {
+export interface IUser {
   id?: string;
   name?: string;
   email?: string;

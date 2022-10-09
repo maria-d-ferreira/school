@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-
-import { useNavigate } from "react-router";
+import React, { memo, useState } from "react";
 
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,25 +8,24 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
+import useValidateInput from "../../../hooks/useValidateInput";
 import { useCreateUserMutation } from "../../../apis/student.api";
-import { InputAdornment, TextField, IconButton } from "@material-ui/core";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { TextField } from "@material-ui/core";
+import axios from "axios";
+import { usersActions } from "../../../store/users.slice";
+import { useDispatch } from "react-redux";
 
 interface Props {
-  handleNewStudent(): void;
   handeleShowCreate(b: boolean): void;
 }
 
 const CreateStudent: React.FC<Props> = props => {
-  const { handleNewStudent, handeleShowCreate } = props;
-  const navigate = useNavigate();
+  const { handeleShowCreate } = props;
   const [createUser] = useCreateUserMutation();
   const [err, setErr] = useState(null);
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleTogglePassword = () =>
-    setShowPassword(showPassword => !showPassword);
+  const dispatch = useDispatch();
 
   const errorDiv = err ? (
     <div className="error" style={{ color: "#E3A15A" }}>
@@ -38,33 +35,71 @@ const CreateStudent: React.FC<Props> = props => {
     ""
   );
 
+  // const {
+  //   value: enteredName,
+  //   isValid: enteredNameIsValid,
+  //   hasError: nameError,
+  //   valueChangeHandler: nameChangedHandler,
+  //   reset: reseNameInput,
+  // } = useValidateInput((value: string) => value !== "");
+
+  // const {
+  //   value: enteredEmail,
+  //   isValid: enteredEmailIsValid,
+  //   hasError: emailError,
+  //   valueChangeHandler: emailChangedHandler,
+  //   reset: resetEmailInput,
+  // } = useValidateInput((value: string) => value !== "");
+
+  // const {
+  //   value: enteredPassword,
+  //   isValid: enteredPasswordIsValid,
+  //   hasError: passwordError,
+  //   valueChangeHandler: passwordChangedHandler,
+  //   reset: resetPasswordInput,
+  // } = useValidateInput((value: string) => !(value.length < 8));
+
+  // const validateForm: boolean =
+  //   enteredNameIsValid && enteredEmailIsValid && enteredPasswordIsValid;
+
+  // const resetInputs = () => {
+  //   reseNameInput();
+  //   resetEmailInput();
+  //   resetPasswordInput();
+  // };
+
+  const clearForm = () => {
+    Array.from(document.querySelectorAll("input")).forEach(
+      input => (input.value = "")
+    );
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     setErr(null);
+    event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name").toString();
     const email = formData.get("email").toString();
     const password = formData.get("password").toString();
 
-    const clearForm = () => {
-      Array.from(document.querySelectorAll("input")).forEach(
-        input => (input.value = "")
-      );
-    };
-
     if (password.length < 8) {
       return setErr("password minimum of 8 characters");
     }
-
     await createUser({ name, email, password })
       .unwrap()
       .catch(error => {
         setErr(error.data.message);
       });
-    clearForm();
 
-    handleNewStudent();
+    if (err) {
+      clearForm();
+    }
+
+    const url = process.env.REACT_APP_BASE_URL + "/users/users";
+    await axios.get(url).then(function (response) {
+      dispatch(usersActions.getUsers(response.data));
+    });
   };
 
   return (
@@ -91,6 +126,9 @@ const CreateStudent: React.FC<Props> = props => {
                 id="name"
                 label="Full Name"
                 autoFocus
+                // error={nameError}
+                // value={enteredName}
+                // onChange={nameChangedHandler}
               />
             </Grid>
 
@@ -102,6 +140,10 @@ const CreateStudent: React.FC<Props> = props => {
                 id="email"
                 label="Email"
                 name="email"
+                onFocus={() => setErr(null)}
+                // error={emailError}
+                // value={enteredEmail}
+                // onChange={emailChangedHandler}
               />
             </Grid>
             <Grid item xs={12}>
@@ -112,6 +154,9 @@ const CreateStudent: React.FC<Props> = props => {
                 name="password"
                 label="Password (min 8 characters)"
                 id="password"
+                // error={passwordError}
+                // value={enteredPassword}
+                // onChange={passwordChangedHandler}
               />
             </Grid>
           </Grid>
@@ -129,6 +174,7 @@ const CreateStudent: React.FC<Props> = props => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                // disabled={!validateForm}
               >
                 create
               </Button>
@@ -153,4 +199,4 @@ const CreateStudent: React.FC<Props> = props => {
   );
 };
 
-export default CreateStudent;
+export default memo(CreateStudent);

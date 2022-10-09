@@ -2,13 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { Document, ObjectId } from 'mongoose';
 
-const student = new mongoose.Schema({
-  studentName: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  classwork: String,
-  presence: Boolean,
-  absence: String,
-});
-
 @Schema({ versionKey: false })
 export class Course extends Document {
   @Prop()

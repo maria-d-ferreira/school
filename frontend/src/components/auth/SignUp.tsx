@@ -15,6 +15,9 @@ import { useCreateUserMutation } from "../../apis/teacher.api";
 import { InputAdornment, TextField, IconButton } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { usersActions } from "../../store/users.slice";
 
 // const validateEmail(e: React.FormEvent<HTMLFormElement>) => {
 //   const = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -26,6 +29,7 @@ const SignUp: React.FC = () => {
   const [createUser] = useCreateUserMutation();
   const [err, setErr] = useState(null);
   const [showPassword, setShowPassword] = React.useState(false);
+  const dispatch = useDispatch();
 
   const handleTogglePassword = () =>
     setShowPassword(showPassword => !showPassword);
@@ -57,6 +61,10 @@ const SignUp: React.FC = () => {
       .catch(error => {
         setErr(error.data.message);
       });
+    const url = process.env.REACT_APP_BASE_URL + "/users/users";
+    await axios.get(url).then(function (response) {
+      dispatch(usersActions.getUsers(response.data));
+    });
   };
 
   return (
