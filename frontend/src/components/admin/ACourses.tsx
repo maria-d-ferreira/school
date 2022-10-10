@@ -390,6 +390,7 @@ const ACourses: React.FC = () => {
                               marginTop: "1.2em",
                             }}
                             onClick={() => {
+                              setShowStudents(false);
                               handleChangeTitle(c.title);
                               handleChangeId(c._id);
                               setOpenDialog(true);
