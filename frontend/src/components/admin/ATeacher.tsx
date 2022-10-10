@@ -43,8 +43,6 @@ const ATeacher: React.FC = () => {
     });
   };
 
-
-  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={4}>

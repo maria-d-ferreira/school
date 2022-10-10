@@ -26,6 +26,7 @@ import CreateCourse from "./utils/CreateCourse";
 import FormDialog from "../utils/FormDialog";
 import { coursesActions } from "../../store/courses.slice";
 import { useDispatch } from "react-redux";
+import AStudentsTable from "./utils/AStudentsTable";
 
 const tableContainerSx: SxProps = {
   border: "1px solid rgba(128,128,128,0.4)",
@@ -61,6 +62,7 @@ const ACourses: React.FC = () => {
   const courses = store.getState().courses.courses;
   const users = store.getState().users.users;
   const teachers = users.filter(u => u.role === "teacher");
+  const students = users.filter(u => u.role === "student");
 
   const handleTeacherChange = async (teacher: string, course: string) => {
     const url =
@@ -80,6 +82,26 @@ const ACourses: React.FC = () => {
   const handleTeacherRemove = async (course: string) => {
     const url =
       process.env.REACT_APP_BASE_URL + "/courses/remove-teacher/" + course;
+    await axios.patch(url);
+
+    const ur = process.env.REACT_APP_BASE_URL + "/courses/courses";
+    await axios.get(ur).then(function (response) {
+      dispatch(coursesActions.getCourses(response.data));
+    });
+  };
+
+  const handleStudentRemove = async (course: string, student: string) => {};
+  const handleStudentAdd = async (student: string, course: string) => {
+    console.log(course);
+    console.log(student);
+
+    const url =
+      process.env.REACT_APP_BASE_URL +
+      "/courses/add-student/" +
+      student +
+      "/" +
+      course;
+    console.log(url);
     await axios.patch(url);
 
     const ur = process.env.REACT_APP_BASE_URL + "/courses/courses";
@@ -120,7 +142,7 @@ const ACourses: React.FC = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={4}>
-        <Grid item xs={6} minWidth={325}>
+        <Grid item xs={8} minWidth={325}>
           <Grid container>
             <Grid item xs={8}>
               <Typography variant="body1" textAlign={"left"}>
@@ -141,6 +163,7 @@ const ACourses: React.FC = () => {
                 onClick={() => {
                   setShowCreate(true);
                   setOpenDialog(false);
+                  setShowStudents(false);
                 }}
               >
                 create
@@ -164,7 +187,8 @@ const ACourses: React.FC = () => {
                   <TableCell scope="header">Start</TableCell>
                   <TableCell scope="header">End</TableCell>
                   <TableCell scope="header">Teacher</TableCell>
-                  <TableCell scope="header"></TableCell>
+                  <TableCell scope="header">Students</TableCell>
+                  <TableCell scope="header">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -184,16 +208,29 @@ const ACourses: React.FC = () => {
                         </TableCell>
 
                         <TableCell scope="row">{c.description}</TableCell>
-
                         <TableCell scope="row">{c.start}</TableCell>
-
                         <TableCell scope="row">{c.end}</TableCell>
-
                         <TableCell scope="row">
                           {c.teacher ? c.teacher.name : ""}
                         </TableCell>
+                        <TableCell scope="row">
+                          <Button
+                            variant="text"
+                            style={{
+                              textTransform: "none",
+                            }}
+                            onClick={() => {
+                              setShowCreate(false);
+                              setShowStudents(true);
+                              setCourse(c);
+                            }}
+                          >
+                            show students
+                          </Button>
+                        </TableCell>
 
                         <TableCell scope="row">
+                          {/* ----------------------------------------------------------------------------------------------------------------- */}
                           <FormControl
                             variant="standard"
                             sx={{
@@ -221,21 +258,26 @@ const ACourses: React.FC = () => {
                               labelId=""
                               id=""
                               value=""
-                              // onChange={handleTeacherChange}
                               label="Teacher"
                             >
                               <MenuItem
+                                sx={{
+                                  fontSize: "80%",
+                                }}
                                 value=""
                                 onClick={() => {
                                   handleTeacherRemove(c._id);
                                 }}
                               >
-                                <em>none</em>
+                                <em>None</em>
                               </MenuItem>
-                              {teachers &&
+                              {teachers.sort() &&
                                 teachers.length > 0 &&
                                 teachers.map((t: any) => (
                                   <MenuItem
+                                    sx={{
+                                      fontSize: "80%",
+                                    }}
                                     key={Math.random()}
                                     value={t}
                                     onClick={() => {
@@ -248,19 +290,96 @@ const ACourses: React.FC = () => {
                             </Select>
                           </FormControl>
 
-                          <Button
-                            variant="outlined"
-                            style={{
-                              height: "25px",
+                          {/* ----------------------------------------------------------------------------------------------------------------- */}
+
+                          <FormControl
+                            variant="standard"
+                            sx={{
                               width: "100%",
-                              textTransform: "none",
                             }}
-                            // onClick={() => {
-
-                            // }}
                           >
-                            students
-                          </Button>
+                            <InputLabel
+                              id=""
+                              sx={{
+                                ml: 1,
+                                color: "primary.main",
+                                fontSize: "99.97%",
+                              }}
+                            >
+                              students
+                            </InputLabel>
+
+                            <Select
+                              sx={{
+                                border: 1,
+                                height: "30px",
+                                borderRadius: 1,
+                                borderColor: "primary.main",
+                              }}
+                              labelId=""
+                              id=""
+                              value=""
+                              label="Students"
+                            >
+                              <MenuItem
+                                sx={{
+                                  fontSize: "80%",
+                                }}
+                                value=""
+                                onClick={() => {}}
+                              >
+                                <em>Add all</em>
+                              </MenuItem>
+
+                              {students.sort() &&
+                                students.length > 0 &&
+                                students.map((s: any) => (
+                                  <MenuItem
+                                    sx={{
+                                      fontSize: "80%",
+                                    }}
+                                    key={Math.random()}
+                                    value={s}
+                                  >
+                                    <Grid
+                                      container
+                                      sx={{
+                                        width: "100%",
+                                      }}
+                                    >
+                                      <Grid item xs={9}>
+                                        {s.name}
+                                      </Grid>
+                                      <Grid item xs={3}>
+                                        <Button
+                                          variant="text"
+                                          sx={{
+                                            height: "25px",
+                                            textTransform: "none",
+                                            alignContent: "left",
+                                          }}
+                                          onClick={() => {
+                                            {
+                                              c.students.find(c => c.id == s.id)
+                                                ? handleStudentRemove(
+                                                    c._id,
+                                                    s.id
+                                                  )
+                                                : handleStudentAdd(s.id, c._id);
+                                            }
+                                          }}
+                                        >
+                                          {c.students.find(c => c.id == s.id)
+                                            ? "x"
+                                            : "+"}
+                                        </Button>
+                                      </Grid>
+                                    </Grid>
+                                  </MenuItem>
+                                ))}
+                            </Select>
+                          </FormControl>
+                          {/* ----------------------------------------------------------------------------------------------------------------- */}
 
                           <Button
                             variant="outlined"
@@ -268,6 +387,7 @@ const ACourses: React.FC = () => {
                               height: "25px",
                               width: "100%",
                               textTransform: "none",
+                              marginTop: "1.2em",
                             }}
                             onClick={() => {
                               handleChangeTitle(c.title);
@@ -277,6 +397,7 @@ const ACourses: React.FC = () => {
                           >
                             delete
                           </Button>
+                          {/* ----------------------------------------------------------------------------------------------------------------- */}
                         </TableCell>
                       </TableRow>
                     ))
@@ -286,6 +407,8 @@ const ACourses: React.FC = () => {
           </TableContainer>
         </Grid>
 
+        {/* ----------------------------------------------------------------------------------------------------------------- */}
+
         {showCreate && (
           <Grid item xs={4} minWidth={325} paddingLeft={3}>
             <Item>
@@ -293,9 +416,8 @@ const ACourses: React.FC = () => {
             </Item>
           </Grid>
         )}
-
         {openDialog && (
-          <Grid item xs={4} minWidth={325} paddingLeft={3} border="none">
+          <Grid item xs={3} minWidth={325} paddingLeft={3} border="none">
             <Item>
               <FormDialog
                 title="Are you sure you want to delete"
@@ -303,6 +425,14 @@ const ACourses: React.FC = () => {
                 openDialog={true}
                 handleDialog={handleDialog}
               />
+            </Item>
+          </Grid>
+        )}
+
+        {showStudents && (
+          <Grid item xs={4} minWidth={325} paddingLeft={3} border="none">
+            <Item>
+              <AStudentsTable students={students} course={course.title} />
             </Item>
           </Grid>
         )}

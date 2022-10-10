@@ -86,7 +86,7 @@ export default function ResponsiveDrawer(props: Props) {
       case 2:
         return <ACourses />;
       default:
-        return <ATeacher />;
+      // return <ATeacher />;
     }
   };
 
