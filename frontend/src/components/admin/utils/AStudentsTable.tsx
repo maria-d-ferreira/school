@@ -79,14 +79,7 @@ const AStudentsTable: React.FC<Props> = props => {
             students
               .map((student: any) => (
                 <TableRow key={Math.random()}>
-                  <TableCell
-                    scope="row"
-                    sx={{
-                      color: "primary.main",
-                    }}
-                  >
-                    {student.name}
-                  </TableCell>
+                  <TableCell scope="row">{student.name}</TableCell>
                 </TableRow>
               ))
               .sort()}

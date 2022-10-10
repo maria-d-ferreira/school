@@ -29,7 +29,7 @@ import { useDispatch } from "react-redux";
 import AStudentsTable from "./utils/AStudentsTable";
 
 const tableContainerSx: SxProps = {
-  border: "1px solid rgba(128,128,128,0.4)",
+  // border: "1px solid rgba(128,128,128,0.4)",
   marginLeft: "auto",
   marginRight: "auto",
   marginTop: 4,
@@ -47,13 +47,10 @@ const Item = styled(Paper)(({ theme }) => ({
 const ACourses: React.FC = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-
   const [showStudents, setShowStudents] = useState(false);
   const [title, setTitle] = useState("");
-  const [id, setId] = useState("");
-
   const [course, setCourse] = useState(null);
-
+  const [id, setId] = useState("");
   const dispatch = useDispatch();
 
   useSelector(state => state.courses.courses);
@@ -63,6 +60,8 @@ const ACourses: React.FC = () => {
   const users = store.getState().users.users;
   const teachers = users.filter(u => u.role === "teacher");
   const students = users.filter(u => u.role === "student");
+
+  // ------------------------------------------------------------------------------------------------------------------------
 
   const handleTeacherChange = async (teacher: string, course: string) => {
     const url =
@@ -90,6 +89,7 @@ const ACourses: React.FC = () => {
     });
   };
 
+  // ------------------------------------------------------------------------------------------------------------------------
   const handleStudentRemove = async (course: string, student: string) => {};
   const handleStudentAdd = async (student: string, course: string) => {
     console.log(course);
@@ -110,21 +110,20 @@ const ACourses: React.FC = () => {
     });
   };
 
+  // ------------------------------------------------------------------------------------------------------------------------
   const handleShowCreate = (b: boolean) => setShowCreate(b);
 
-  const handleShowEdit = (b: boolean) => {
-    setShowCreate(false);
-    setOpenDialog(b);
-  };
-
+  // ------------------------------------------------------------------------------------------------------------------------
   const handleChangeTitle = (title: string) => setTitle(title);
   const handleChangeId = (id: string) => setId(id);
 
+  // ------------------------------------------------------------------------------------------------------------------------
   const handleDialog = (b: boolean) => {
     setOpenDialog(false);
     b && handleDelete(id);
   };
 
+  // ------------------------------------------------------------------------------------------------------------------------
   const handleDelete = async (id: string) => {
     const url = process.env.REACT_APP_BASE_URL + "/courses/course/" + id;
     await axios.delete(url);
@@ -135,10 +134,7 @@ const ACourses: React.FC = () => {
     });
   };
 
-  const handleStudents = (title: string) => {
-    setShowStudents(true);
-  };
-
+  // ------------------------------------------------------------------------------------------------------------------------
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={4}>
@@ -218,6 +214,7 @@ const ACourses: React.FC = () => {
                             variant="text"
                             style={{
                               textTransform: "none",
+                              fontSize: "90%",
                             }}
                             onClick={() => {
                               setShowCreate(false);
@@ -228,9 +225,8 @@ const ACourses: React.FC = () => {
                             show students
                           </Button>
                         </TableCell>
-
+                        {/* ----------------------------------------------------------------------------------------------------------------- */}
                         <TableCell scope="row">
-                          {/* ----------------------------------------------------------------------------------------------------------------- */}
                           <FormControl
                             variant="standard"
                             sx={{
@@ -242,7 +238,7 @@ const ACourses: React.FC = () => {
                               sx={{
                                 ml: 1,
                                 color: "primary.main",
-                                fontSize: "99.97%",
+                                fontSize: "80%",
                               }}
                             >
                               teacher
@@ -303,7 +299,7 @@ const ACourses: React.FC = () => {
                               sx={{
                                 ml: 1,
                                 color: "primary.main",
-                                fontSize: "99.97%",
+                                fontSize: "80%",
                               }}
                             >
                               students
@@ -388,6 +384,7 @@ const ACourses: React.FC = () => {
                               width: "100%",
                               textTransform: "none",
                               marginTop: "1.2em",
+                              fontSize: "80%",
                             }}
                             onClick={() => {
                               setShowStudents(false);
@@ -398,7 +395,6 @@ const ACourses: React.FC = () => {
                           >
                             delete
                           </Button>
-                          {/* ----------------------------------------------------------------------------------------------------------------- */}
                         </TableCell>
                       </TableRow>
                     ))
@@ -407,7 +403,6 @@ const ACourses: React.FC = () => {
             </Table>
           </TableContainer>
         </Grid>
-
         {/* ----------------------------------------------------------------------------------------------------------------- */}
 
         {showCreate && (
