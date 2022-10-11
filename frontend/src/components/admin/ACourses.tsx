@@ -1,4 +1,5 @@
 import { memo, useEffect, useState } from "react";
+import dayjs from "dayjs";
 import axios from "axios";
 import {
   Button,
@@ -204,8 +205,13 @@ const ACourses: React.FC = () => {
                         </TableCell>
 
                         <TableCell scope="row">{c.description}</TableCell>
-                        <TableCell scope="row">{c.start}</TableCell>
-                        <TableCell scope="row">{c.end}</TableCell>
+                        <TableCell scope="row">
+                          {dayjs(c.start).format("DD/MM/YYYY")}
+                        </TableCell>
+
+                        <TableCell scope="row">
+                          {dayjs(c.end).format("DD/MM/YYYY")}
+                        </TableCell>
                         <TableCell scope="row">
                           {c.teacher ? c.teacher.name : ""}
                         </TableCell>
@@ -413,7 +419,7 @@ const ACourses: React.FC = () => {
           </Grid>
         )}
         {openDialog && (
-          <Grid item xs={3} minWidth={325} paddingLeft={3} border="none">
+          <Grid item xs={4} minWidth={325} paddingLeft={3} border="none">
             <Item>
               <FormDialog
                 title="Are you sure you want to delete"
